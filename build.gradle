@@ -26,3 +26,17 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    // Sdk and tools
+    minSdkVersion = 21
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    versionCode = 1
+    versionName = '1.0.0'
+
+    // App dependencies
+    retrofitVersion = '2.6.1'
+    okhttp3Version = '4.0.1'
+    gsonVersion = '2.7'
+}
