@@ -16,8 +16,8 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField 'String', "ApiKey", Pixabay_ApiKey
-            resValue 'string', "api_key", Pixabay_ApiKey
+            buildConfigField 'String', "PixabayApiKey", Pixabay_ApiKey
+            resValue 'string', "pixabay_api_key", Pixabay_ApiKey
         }
         release {
             minifyEnabled false
