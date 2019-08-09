@@ -35,7 +35,9 @@ ext {
     versionCode = 1
     versionName = '1.0.0'
 
+
     // App dependencies
+    lifecycleVersion = '2.2.0-alpha03'
     retrofitVersion = '2.6.1'
     okhttp3Version = '4.0.1'
     gsonVersion = '2.7'//2.8.5

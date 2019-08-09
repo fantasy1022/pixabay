@@ -9,6 +9,6 @@ class ImageSearchRepositoryImpl(
 ) : ImageSearchRepository {
 
     override suspend fun getImageSearch(key: String, query: String, imageType: String): ImagesInfo =
-        imagesMapper.toImageInfo(imageSearchApi.getImages(key, query, imageType).await())
+        imagesMapper.toImageInfo(imageSearchApi.getImagesAsync(key, query, imageType))
 
 }
