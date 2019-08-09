@@ -11,9 +11,10 @@ import com.fantasy1022.pixabay.R
 import com.fantasy1022.pixabay.utilities.InjectorUtils
 
 import kotlinx.android.synthetic.main.activity_image_result.*
+import kotlinx.android.synthetic.main.content_image_result.*
 
 
-class ImageResultActivity : AppCompatActivity() {
+class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
 
     companion object {
         private const val KEY_ARG_QUERY = "_KEY_ARG_QUERY"
@@ -27,21 +28,31 @@ class ImageResultActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ImageResultViewModel
     private lateinit var query: String
+    private lateinit var imageAdapter: ImageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_result)
         setSupportActionBar(toolbar)
         query = intent.getStringExtra(KEY_ARG_QUERY)
-
+        setUpRecyclerView()
 
         val factory = InjectorUtils.provideImageResultViewModel()
         viewModel = ViewModelProvider(this, factory).get(ImageResultViewModel::class.java)
         viewModel.getSearchImages(query).observe(this, Observer { imagesInfo ->
-            Log.i("Fan", imagesInfo.toString())
-            //TODO: to new activity
+//            Log.i("Fan", imagesInfo.toString())
+            imageAdapter.updateList(imagesInfo.imagesDetailInfos)
         })
 
     }
 
+    private fun setUpRecyclerView() {
+        imageAdapter = ImageAdapter(callback = this)
+        imageRecyclerView.adapter = imageAdapter
+        //TODO: handle paging
+    }
+
+    override fun onClick(transitionData: ImageAdapter.ItemViewHolder.TransitionData) {
+
+    }
 }

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.fantasy1022.pixabay.R
 import com.fantasy1022.pixabay.data.ImagesInfo.ImageDetailInfo
 import kotlinx.android.extensions.LayoutContainer
@@ -29,6 +30,11 @@ class ImageAdapter(
         holder.updateContent(imageDetailInfos[position])
     }
 
+    fun updateList(imageDetailInfos: List<ImageDetailInfo>) {
+        this.imageDetailInfos = imageDetailInfos
+        notifyDataSetChanged()
+    }
+
     class ItemViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) :
         RecyclerView.ViewHolder(itemView), LayoutContainer {
 
@@ -45,7 +51,8 @@ class ImageAdapter(
         }
 
         fun updateContent(imageDetailInfo: ImageDetailInfo) {
-            imageSingleView.setImageURI(imageDetailInfo.previewURL)
+
+            imageSingleView.setImageURI(imageDetailInfo.largeImageURL)
         }
     }
 }
