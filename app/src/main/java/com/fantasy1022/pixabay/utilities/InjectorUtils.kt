@@ -5,7 +5,7 @@ import com.fantasy1022.pixabay.data.ImagesMapper
 import com.fantasy1022.pixabay.repository.ImageSearchApi
 import com.fantasy1022.pixabay.repository.ImageSearchRepository
 import com.fantasy1022.pixabay.repository.ImageSearchRepositoryImpl
-import com.fantasy1022.pixabay.ui.ImageSerachViewModelFactory
+import com.fantasy1022.pixabay.ui.main.ImageSerachViewModelFactory
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

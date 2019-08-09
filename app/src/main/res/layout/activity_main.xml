@@ -6,14 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/traveling"
-        tools:context=".ui.ImageSearchActivity">
+        tools:context=".ui.main.ImageSearchActivity">
 
     <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/searchEditText"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:hint="@string/search_hint"
-
             android:textCursorDrawable="@drawable/color_cursor"
             android:background="@android:color/black"
             android:textColor="@android:color/darker_gray"

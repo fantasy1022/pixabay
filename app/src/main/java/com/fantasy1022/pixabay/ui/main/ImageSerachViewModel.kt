@@ -1,4 +1,4 @@
-package com.fantasy1022.pixabay.ui
+package com.fantasy1022.pixabay.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
