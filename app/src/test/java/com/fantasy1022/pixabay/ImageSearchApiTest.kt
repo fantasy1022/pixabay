@@ -1,22 +1,21 @@
 package com.fantasy1022.pixabay
 
 import com.fantasy1022.pixabay.repository.ImageSearchApi
-import junit.framework.Assert.assertNotNull
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.junit.Assert
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ImageSearchApiTest {
 
-
-    val API_KEY: String = BuildConfig.PixabayApiKey
-
     @Throws(Exception::class)
     @Test
-    fun test_GetImageSearchApi_OK() {
+    fun test_GetImageSearchApi_OK() = runBlocking {
+
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
 
@@ -26,14 +25,11 @@ class ImageSearchApiTest {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+        val inputQuery = "app"
         val api = retrofit.create(ImageSearchApi::class.java)
-        val call = api.getImages(API_KEY, "app", "photo")
+        val call = async { api.getImagesAsync(BuildConfig.PixabayApiKey, inputQuery, "photo") }
+        val imagesEntity = call.await()
 
-        val response = call.execute()
-        Assert.assertNotNull(response)
-        Assert.assertTrue("Error response: http code = " + response.code(), response.isSuccessful)
-
-        val imagesEntity = response.body()
         assertNotNull(imagesEntity)
         assertNotNull(imagesEntity!!.total)
         assertNotNull(imagesEntity!!.totalHits)
@@ -61,4 +57,5 @@ class ImageSearchApiTest {
             assertNotNull(imageBean.userImageURL)
         }
     }
+
 }

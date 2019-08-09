@@ -15,7 +15,6 @@ interface ImageSearchApi {
 
     @Headers("Accept: application/json")
     @GET(".")
-    fun getImages(@Query("key") key: String, @Query("q") query: String, @Query("image_type") imageType: String): Deferred<ImagesEntity>
-
+    suspend fun getImagesAsync(@Query("key") key: String, @Query("q") query: String, @Query("image_type") imageType: String): ImagesEntity
 
 }
