@@ -5,7 +5,7 @@ import com.fantasy1022.pixabay.data.ImagesMapper
 import com.fantasy1022.pixabay.repository.ImageSearchApi
 import com.fantasy1022.pixabay.repository.ImageSearchRepository
 import com.fantasy1022.pixabay.repository.ImageSearchRepositoryImpl
-import com.fantasy1022.pixabay.ui.main.ImageSerachViewModelFactory
+import com.fantasy1022.pixabay.ui.result.ImageResultViewModelFactory
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,8 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 object InjectorUtils {
     private const val BASE_URL = Constant.PIXABAY_BASE_URL
 
-    fun provideImageSearchViewModel(): ImageSerachViewModelFactory {
-        return ImageSerachViewModelFactory(provideImageSearchRepository())
+    fun provideImageResultViewModel(): ImageResultViewModelFactory {
+        return ImageResultViewModelFactory(provideImageSearchRepository())
     }
 
     private fun provideImageSearchRepository(): ImageSearchRepository {
