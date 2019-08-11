@@ -19,7 +19,7 @@ class ImagePagingDataSource(
     private val tag = this::class.java.simpleName
 
     lateinit var key: String
-    lateinit var query: String
+    var query: String = "apple"
     lateinit var imageType: String
 
     override val coroutineContext: CoroutineContext
@@ -32,7 +32,7 @@ class ImagePagingDataSource(
         launch {
             //TODO: try catch
             //FIXME: get parameter
-            val response = imageSearchApi.getImagesAsync(Constant.PIXABAY_API_KEY, "apple", "photo", 1).await()
+            val response = imageSearchApi.getImagesAsync(Constant.PIXABAY_API_KEY, query, "photo", 1).await()
             if (response.isSuccessful) {
                 val imagesInfo = imagesMapper.toImagesInfo(response.body()!!)
                 callback.onResult(imagesInfo.imagesDetailInfos, null, 2)
@@ -68,7 +68,7 @@ class ImagePagingDataSourceFactory(
 
     override fun create(): DataSource<Int, ImagesInfo.ImageDetailInfo> {
         return ImagePagingDataSource(imageSearchApi, imagesMapper).apply {
-//            this.key = key
+            //            this.key = key
 //            this.query = query
 //            this.imageType = imageType
         }
