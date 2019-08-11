@@ -2,6 +2,7 @@ package com.fantasy1022.pixabay.utilities
 
 import com.fantasy1022.pixabay.common.Constant
 import com.fantasy1022.pixabay.data.ImagesMapper
+import com.fantasy1022.pixabay.repository.ImagePagingDataSourceFactory
 import com.fantasy1022.pixabay.repository.ImageSearchApi
 import com.fantasy1022.pixabay.repository.ImageSearchRepository
 import com.fantasy1022.pixabay.repository.ImageSearchRepositoryImpl
@@ -23,7 +24,11 @@ object InjectorUtils {
     }
 
     private fun provideImageSearchRepository(): ImageSearchRepository {
-        return ImageSearchRepositoryImpl(provideImageSearchApi(), ImagesMapper)
+        return ImageSearchRepositoryImpl(provideImagePageingDataDourceFactory())
+    }
+
+    private fun provideImagePageingDataDourceFactory(): ImagePagingDataSourceFactory {
+        return ImagePagingDataSourceFactory(provideImageSearchApi(), ImagesMapper)
     }
 
     private fun provideImageSearchApi(): ImageSearchApi {

@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.fantasy1022.pixabay.R
 import com.fantasy1022.pixabay.common.Constant
@@ -14,27 +16,30 @@ import kotlinx.android.synthetic.main.item_image_grid.*
 
 
 class ImageAdapter(
-    private var imageDetailInfos: List<ImageDetailInfo> = mutableListOf(),
     private val callback: Callback
-) : RecyclerView.Adapter<ImageAdapter.ItemViewHolder>() {
+) : PagedListAdapter<ImageDetailInfo, ImageAdapter.ItemViewHolder>(diffCallback) {
 
     interface Callback : ItemViewHolder.OnItemClickListener
 
+    companion object {
+        val diffCallback = object : DiffUtil.ItemCallback<ImageDetailInfo>() {
+            override fun areItemsTheSame(oldItem: ImageDetailInfo, newItem: ImageDetailInfo): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: ImageDetailInfo, newItem: ImageDetailInfo): Boolean {
+                return oldItem.webformatURL == newItem.webformatURL
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_image_grid, parent, false)
         return ItemViewHolder(view, callback)
     }
 
-    override fun getItemCount(): Int = imageDetailInfos.size
-
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.updateContent(imageDetailInfos[position])
-    }
-
-    fun updateList(imageDetailInfos: List<ImageDetailInfo>) {
-        this.imageDetailInfos = imageDetailInfos
-        notifyDataSetChanged()
+        getItem(position)?.let { holder.updateContent(it) }
     }
 
     class ItemViewHolder(

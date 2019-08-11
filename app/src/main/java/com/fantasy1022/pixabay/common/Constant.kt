@@ -7,4 +7,6 @@ object Constant {
     const val PIXABAY_API_KEY = BuildConfig.PixabayApiKey
 
     const val BASE_IMAGE_HEIGHT = 120f //dp
+
+    const val PAGE_SIZE = 20
 }

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.content_image_result.*
 class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
 
     companion object {
-        private const val KEY_ARG_QUERY = "_KEY_ARG_QUERY"
+        private const val KEY_ARG_QUERY = "KEY_ARG_QUERY"
 
         fun createIntent(context: Context, query: String): Intent {
             return Intent(context, ImageResultActivity::class.java).apply {
@@ -37,15 +37,13 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
         val factory = InjectorUtils.provideImageResultViewModel()
         viewModel = ViewModelProvider(this, factory).get(ImageResultViewModel::class.java)
         viewModel.getSearchImages(query).observe(this, Observer { imagesInfo ->
-            imageAdapter.updateList(imagesInfo.imagesDetailInfos)
+            imageAdapter.submitList(imagesInfo)
         })
-
     }
 
     private fun setUpRecyclerView() {
         imageAdapter = ImageAdapter(callback = this)
         imageRecyclerView.adapter = imageAdapter
-        //TODO: handle paging
     }
 
     override fun onClick(transitionData: ImageAdapter.ItemViewHolder.TransitionData) {

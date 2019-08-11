@@ -4,7 +4,7 @@ import java.util.*
 
 object ImagesMapper {
 
-    fun toImageInfo(entity: ImagesEntity): ImagesInfo {
+    fun toImagesInfo(entity: ImagesEntity): ImagesInfo {
         val averageRatio = entity.hits.map { (it.imageWidth / it.imageHeight) }.average()
         return ImagesInfo(total = entity.total,
             totalHits = entity.totalHits,
