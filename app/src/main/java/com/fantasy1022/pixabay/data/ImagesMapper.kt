@@ -1,15 +1,21 @@
 package com.fantasy1022.pixabay.data
 
+import java.util.*
+
 object ImagesMapper {
 
     fun toImageInfo(entity: ImagesEntity): ImagesInfo {
+        val averageRatio = entity.hits.map { (it.imageWidth / it.imageHeight) }.average()
         return ImagesInfo(total = entity.total,
             totalHits = entity.totalHits,
-            imagesDetailInfos = entity.hits.map { toImageDetailInfo(it) })
+            imagesDetailInfos = entity.hits.map { toImageDetailInfo(it, averageRatio) }
+        )
     }
 
-    //TODO: Check image properties
-    private fun toImageDetailInfo(imageBean: ImagesEntity.ImageBean): ImagesInfo.ImageDetailInfo {
+    private fun toImageDetailInfo(
+        imageBean: ImagesEntity.ImageBean,
+        averageRation: Double
+    ): ImagesInfo.ImageDetailInfo {
         return imageBean.run {
             ImagesInfo.ImageDetailInfo(
                 id = id,
@@ -33,8 +39,13 @@ object ImagesMapper {
                 comments = comments,
                 user_id = user_id,
                 user = user,
-                userImageURL = userImageURL
+                userImageURL = userImageURL,
+                imageRatio = getImageHeightRatio(imageWidth, imageHeight, averageRation)
             )
         }
     }
+
+    private fun getImageHeightRatio(imageWidth: Int, imageHeight: Int, averageRatio: Double): Float =
+        ((imageWidth / imageHeight) / averageRatio + Random().nextFloat()).toFloat()
+
 }

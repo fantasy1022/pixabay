@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.fantasy1022.pixabay.R
+import com.fantasy1022.pixabay.common.Constant
 import com.fantasy1022.pixabay.data.ImagesInfo.ImageDetailInfo
+import com.fantasy1022.pixabay.utilities.convertDpToPixel
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_image_grid.*
+
 
 class ImageAdapter(
     private var imageDetailInfos: List<ImageDetailInfo> = mutableListOf(),
@@ -35,9 +37,11 @@ class ImageAdapter(
         notifyDataSetChanged()
     }
 
-    class ItemViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) :
+    class ItemViewHolder(
+        itemView: View,
+        private val onItemClickListener: OnItemClickListener
+    ) :
         RecyclerView.ViewHolder(itemView), LayoutContainer {
-
         override val containerView: View? = itemView
 
         data class TransitionData(
@@ -51,8 +55,12 @@ class ImageAdapter(
         }
 
         fun updateContent(imageDetailInfo: ImageDetailInfo) {
-
-            imageSingleView.setImageURI(imageDetailInfo.largeImageURL)
+            imageSingleView.layoutParams.height = getImageHeightByRatio(imageDetailInfo.imageRatio)
+            imageSingleView.setImageURI(imageDetailInfo.webformatURL)
         }
+
+        private fun getImageHeightByRatio(ratio: Float): Int =
+            (Constant.BASE_IMAGE_HEIGHT.convertDpToPixel(itemView.context) * (if (ratio < 1) 1f else ratio)).toInt()
+
     }
 }

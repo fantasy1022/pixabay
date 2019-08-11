@@ -3,16 +3,13 @@ package com.fantasy1022.pixabay.ui.result
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.fantasy1022.pixabay.R
 import com.fantasy1022.pixabay.utilities.InjectorUtils
-
 import kotlinx.android.synthetic.main.activity_image_result.*
 import kotlinx.android.synthetic.main.content_image_result.*
-
 
 class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
 
@@ -40,7 +37,6 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
         val factory = InjectorUtils.provideImageResultViewModel()
         viewModel = ViewModelProvider(this, factory).get(ImageResultViewModel::class.java)
         viewModel.getSearchImages(query).observe(this, Observer { imagesInfo ->
-//            Log.i("Fan", imagesInfo.toString())
             imageAdapter.updateList(imagesInfo.imagesDetailInfos)
         })
 

@@ -7,7 +7,8 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_image_result"
-        tools:context=".ui.result.ImageResultActivity">
+        tools:context=".ui.result.ImageResultActivity"
+        android:background="@android:color/black">
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/imageRecyclerView"
@@ -18,7 +19,6 @@
             app:spanCount="2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

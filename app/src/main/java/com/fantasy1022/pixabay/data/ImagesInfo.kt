@@ -28,6 +28,7 @@ data class ImagesInfo(
         val comments: Long,
         val user_id: Long,
         val user: String,
-        val userImageURL: String
+        val userImageURL: String,
+        val imageRatio: Float
     )
 }
