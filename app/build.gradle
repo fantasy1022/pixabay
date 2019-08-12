@@ -66,4 +66,8 @@ dependencies {
 
     // Fresco
     implementation "com.facebook.fresco:fresco:$rootProject.frescoVersion"
+
+    // Dialog
+    implementation "com.afollestad.material-dialogs:core:$rootProject.materialDialogVersion"
+    implementation "com.afollestad.material-dialogs:lifecycle:$rootProject.materialDialogVersion"
 }

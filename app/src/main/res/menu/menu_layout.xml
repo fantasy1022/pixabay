@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/layoutStyle"
+          android:orderInCategory="1"
+          android:title="@string/menu_layout_style"
+          app:actionLayout="@layout/action_layout_style"
+          app:showAsAction="always"/>
+</menu>

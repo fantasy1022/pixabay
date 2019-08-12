@@ -42,4 +42,6 @@ ext {
     coroutinesRetrofitAdapterVersion = '0.9.2'
     frescoVersion = "2.0.0"
     pagingVersion = "2.1.0"
+    materialDialogVersion = "3.1.0"
+
 }
