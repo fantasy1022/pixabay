@@ -30,8 +30,11 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_result)
-        setSupportActionBar(toolbar)
         query = intent.getStringExtra(KEY_ARG_QUERY)
+        toolbar.title = query
+        setSupportActionBar(toolbar)
+
+        toolbar.inflateMenu(R.menu.menu_layout)
         setUpRecyclerView()
 
         val factory = InjectorUtils.provideImageResultViewModel()

@@ -2,6 +2,5 @@
     <string name="app_name">Pixabay</string>
 
     <string name="search_hint">Search free images</string>
-    <string name="title_activity_image_result">ImageResultActivity</string>
 
 </resources>
