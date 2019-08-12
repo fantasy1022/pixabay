@@ -24,11 +24,7 @@ object InjectorUtils {
     }
 
     private fun provideImageSearchRepository(): ImageSearchRepository {
-        return ImageSearchRepositoryImpl(provideImagePageingDataDourceFactory())
-    }
-
-    private fun provideImagePageingDataDourceFactory(): ImagePagingDataSourceFactory {
-        return ImagePagingDataSourceFactory(provideImageSearchApi(), ImagesMapper)
+        return ImageSearchRepositoryImpl(provideImageSearchApi(), ImagesMapper)
     }
 
     private fun provideImageSearchApi(): ImageSearchApi {

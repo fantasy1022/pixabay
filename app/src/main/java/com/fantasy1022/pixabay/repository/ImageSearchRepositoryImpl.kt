@@ -9,7 +9,9 @@ import com.fantasy1022.pixabay.data.ImagesInfo
 import com.fantasy1022.pixabay.data.ImagesMapper
 
 class ImageSearchRepositoryImpl(
-    private val imagePagingDataSourceFactory: ImagePagingDataSourceFactory
+    private val imageSearchApi: ImageSearchApi,
+    private val imagesMapper: ImagesMapper
+
 ) : ImageSearchRepository {
 
     override fun getImageSearch(
@@ -23,14 +25,12 @@ class ImageSearchRepositoryImpl(
             .setInitialLoadSizeHint(Constant.PAGE_SIZE * 2)
             .setPrefetchDistance(4)
             .build()
-        with(imagePagingDataSourceFactory) {
-            this.key = key
-            this.query = query
-            this.imageType = imageType
-        }
-        imagePagingDataSourceFactory
+
+        val imagePagingDataSourceFactory =
+            ImagePagingDataSourceFactory(imageSearchApi, imagesMapper, key, query, imageType)
+
         return LivePagedListBuilder(imagePagingDataSourceFactory, pagedListConfig)
-            .setInitialLoadKey(0)
+            .setInitialLoadKey(1)
             .build()
     }
 
