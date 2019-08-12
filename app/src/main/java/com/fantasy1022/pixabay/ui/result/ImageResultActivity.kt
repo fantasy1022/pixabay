@@ -17,13 +17,16 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.fantasy1022.pixabay.R
 import com.fantasy1022.pixabay.utilities.InjectorUtils
+import com.fantasy1022.pixabay.utilities.SpUtils
 import kotlinx.android.synthetic.main.activity_image_result.*
 import kotlinx.android.synthetic.main.content_image_result.*
+import java.lang.IllegalArgumentException
 
 class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
 
     companion object {
         private const val KEY_ARG_QUERY = "KEY_ARG_QUERY"
+        private const val KEY_SP_LAYOUT = "KEY_SP_LAYOUT"
 
         fun createIntent(context: Context, query: String): Intent {
             return Intent(context, ImageResultActivity::class.java).apply {
@@ -43,7 +46,9 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
     private lateinit var viewModel: ImageResultViewModel
     private lateinit var query: String
     private lateinit var imageAdapter: ImageAdapter
-    private lateinit var currentLayoutMangerType: LayoutManagerType
+    private var currentLayoutMangerType: Int = 0
+    private lateinit var spUtils: SpUtils
+
     private val staggeredGridLayoutManager by lazy {
         StaggeredGridLayoutManager(2, VERTICAL)
     }
@@ -59,18 +64,9 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_result)
-        query = intent.getStringExtra(KEY_ARG_QUERY)
-        toolbar.title = query
-        setSupportActionBar(toolbar)
-
-        toolbar.inflateMenu(R.menu.menu_layout)
+        initToolBar()
         setUpRecyclerView()
-
-        val factory = InjectorUtils.provideImageResultViewModel()
-        viewModel = ViewModelProvider(this, factory).get(ImageResultViewModel::class.java)
-        viewModel.getSearchImages(query).observe(this, Observer { imagesInfo ->
-            imageAdapter.submitList(imagesInfo)
-        })
+        initViewModel()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -83,9 +79,11 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
         styleView.setOnClickListener {
             MaterialDialog(this).show {
                 title(R.string.choose_style)
-                //TODO: get initial selection
-                listItemsSingleChoice(items = styleList, initialSelection = 1) { _, index, text ->
-                    switchLayoutManager(LayoutManagerType.toEnum(index))
+                listItemsSingleChoice(
+                    items = styleList,
+                    initialSelection = currentLayoutMangerType
+                ) { _, index, _ ->
+                    switchLayoutManager(index)
                 }
                 lifecycleOwner(this@ImageResultActivity)
             }
@@ -94,35 +92,71 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    private fun setUpRecyclerView() {
-        imageAdapter = ImageAdapter(callback = this)
-        with(imageRecyclerView) {
-            adapter = imageAdapter
-            layoutManager = staggeredGridLayoutManager
-        }
+    private fun initToolBar() {
+        query = intent.getStringExtra(KEY_ARG_QUERY)
+        toolbar.title = query
+        setSupportActionBar(toolbar)
+        toolbar.inflateMenu(R.menu.menu_layout)
     }
 
-    private fun switchLayoutManager(currentLayoutMangerType: LayoutManagerType) {
-        // If a layout manager has already been set, get current scroll position.
-        var scrollPosition: IntArray = imageRecyclerView.layoutManager?.let {
-            (it as StaggeredGridLayoutManager).findFirstCompletelyVisibleItemPositions(null)
-            //TODO:Check other manager
-        } ?: IntArray(2)
+    private fun setUpRecyclerView() {
+        spUtils = SpUtils(this)
+        currentLayoutMangerType = spUtils.getInt(KEY_SP_LAYOUT, 0)
+        imageAdapter = ImageAdapter(callback = this)
+        imageRecyclerView.adapter = imageAdapter
+        switchLayoutManager(currentLayoutMangerType)
+    }
 
-        val currentManager: RecyclerView.LayoutManager = when (currentLayoutMangerType) {
-            LayoutManagerType.STAGGER -> staggeredGridLayoutManager
-            LayoutManagerType.GRID -> gridLayoutManager
-            LayoutManagerType.LINEAR -> linearLayoutManager
+    private fun initViewModel() {
+        val factory = InjectorUtils.provideImageResultViewModel()
+        viewModel = ViewModelProvider(this, factory).get(ImageResultViewModel::class.java)
+        viewModel.getSearchImages(query).observe(this, Observer { imagesInfo ->
+            imageAdapter.submitList(imagesInfo)
+        })
+    }
+
+    private fun switchLayoutManager(layoutIndex: Int) {
+        imageAdapter.isDynamicHeight = layoutIndex == LayoutManagerType.STAGGER.value
+
+        val currentManager: RecyclerView.LayoutManager = when (layoutIndex) {
+            LayoutManagerType.STAGGER.value -> staggeredGridLayoutManager
+            LayoutManagerType.GRID.value -> gridLayoutManager
+            LayoutManagerType.LINEAR.value -> linearLayoutManager
+            else -> throw IllegalArgumentException()
         }
+
+        //Use originally index to get previous position of layout manager
+        val scrollPosition: Int = when (currentLayoutMangerType) {
+            LayoutManagerType.STAGGER.value -> {
+                imageRecyclerView.layoutManager?.let {
+                    (it as StaggeredGridLayoutManager).findFirstCompletelyVisibleItemPositions(null)[0]
+                } ?: 0
+            }
+            LayoutManagerType.GRID.value -> {
+                imageRecyclerView.layoutManager?.let {
+                    (it as GridLayoutManager).findFirstVisibleItemPosition()
+                } ?: 0
+            }
+            LayoutManagerType.LINEAR.value -> {
+                imageRecyclerView.layoutManager?.let {
+                    (it as LinearLayoutManager).findFirstVisibleItemPosition()
+                } ?: 0
+            }
+            else -> throw IllegalArgumentException()
+        }
+
+        currentLayoutMangerType = layoutIndex
+        spUtils.putInt(KEY_SP_LAYOUT, layoutIndex)
 
         with(imageRecyclerView) {
             layoutManager = currentManager
-            scrollToPosition(scrollPosition[0])
+            scrollToPosition(scrollPosition)
+            imageAdapter.notifyDataSetChanged()
         }
 
     }
 
-    override fun onClick(transitionData: ImageAdapter.ItemViewHolder.TransitionData) {
+    override fun onClick(transitionData: TransitionData) {
 
     }
 }

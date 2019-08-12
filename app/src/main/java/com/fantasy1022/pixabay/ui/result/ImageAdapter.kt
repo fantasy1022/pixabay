@@ -19,7 +19,9 @@ class ImageAdapter(
     private val callback: Callback
 ) : PagedListAdapter<ImageDetailInfo, ImageAdapter.ItemViewHolder>(diffCallback) {
 
-    interface Callback : ItemViewHolder.OnItemClickListener
+    interface Callback : OnItemClickListener
+
+    var isDynamicHeight: Boolean = false
 
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<ImageDetailInfo>() {
@@ -42,30 +44,36 @@ class ImageAdapter(
         getItem(position)?.let { holder.updateContent(it) }
     }
 
-    class ItemViewHolder(
+    inner class ItemViewHolder(
         itemView: View,
         private val onItemClickListener: OnItemClickListener
     ) :
         RecyclerView.ViewHolder(itemView), LayoutContainer {
         override val containerView: View? = itemView
 
-        data class TransitionData(
-            val imageDetailInfo: ImageDetailInfo,
-            val position: Int,
-            val sharedElements: Array<Pair<View, String>>
-        )
-
-        interface OnItemClickListener {
-            fun onClick(transitionData: TransitionData)
-        }
 
         fun updateContent(imageDetailInfo: ImageDetailInfo) {
-            imageSingleView.layoutParams.height = getImageHeightByRatio(imageDetailInfo.imageRatio)
+            val result = if (isDynamicHeight) {
+                getImageHeightByRatio(imageDetailInfo.imageRatio)
+            } else {
+                Constant.BASE_GRID_LINEAR_IMAGE_HEIGHT.convertDpToPixel(itemView.context).toInt()
+            }
+            imageSingleView.layoutParams.height = result
             imageSingleView.setImageURI(imageDetailInfo.webformatURL)
         }
 
         private fun getImageHeightByRatio(ratio: Float): Int =
-            (Constant.BASE_IMAGE_HEIGHT.convertDpToPixel(itemView.context) * (if (ratio < 1) 1f else ratio)).toInt()
+            (Constant.BASE_STAGGER_IMAGE_HEIGHT.convertDpToPixel(itemView.context) * (if (ratio < 1) 1f else ratio)).toInt()
 
     }
+}
+
+data class TransitionData(
+    val imageDetailInfo: ImageDetailInfo,
+    val position: Int,
+    val sharedElements: Array<Pair<View, String>>
+)
+
+interface OnItemClickListener {
+    fun onClick(transitionData: TransitionData)
 }

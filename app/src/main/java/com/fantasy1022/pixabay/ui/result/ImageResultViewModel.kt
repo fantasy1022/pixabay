@@ -18,5 +18,4 @@ class ImageResultViewModel(private val imageSearchRepository: ImageSearchReposit
     fun getSearchImages(query: String): LiveData<PagedList<ImagesInfo.ImageDetailInfo>> =
         imageSearchRepository.getImageSearch(Constant.PIXABAY_API_KEY, query, "photo")
 
-
 }
