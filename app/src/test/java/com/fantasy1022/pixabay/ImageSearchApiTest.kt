@@ -1,7 +1,7 @@
 package com.fantasy1022.pixabay
 
 import com.fantasy1022.pixabay.repository.ImageSearchApi
-import kotlinx.coroutines.async
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,15 +23,16 @@ class ImageSearchApiTest {
             .baseUrl("https://pixabay.com/api/")
             .client(OkHttpClient.Builder().addInterceptor(loggingInterceptor).build())
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())
             .build()
 
         val inputQuery = "app"
         val api = retrofit.create(ImageSearchApi::class.java)
-        val call = async { api.getImagesAsync(BuildConfig.PixabayApiKey, inputQuery, "photo") }
-        val imagesEntity = call.await()
+        val call = api.getImagesAsync(BuildConfig.PixabayApiKey, inputQuery, "photo", 1)
+        val imagesEntity = call.await().body()
 
         assertNotNull(imagesEntity)
-        assertNotNull(imagesEntity!!.total)
+        assertNotNull(imagesEntity!!)
         assertNotNull(imagesEntity!!.totalHits)
         imagesEntity!!.hits.forEach { imageBean ->
             assertNotNull(imageBean.id)

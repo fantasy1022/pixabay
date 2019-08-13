@@ -16,7 +16,6 @@ interface ImageSearchApi {
 
     @Headers("Accept: application/json")
     @GET(".")
-    //TODO: include response
     fun getImagesAsync(
         @Query("key") key: String,
         @Query("q") query: String,
