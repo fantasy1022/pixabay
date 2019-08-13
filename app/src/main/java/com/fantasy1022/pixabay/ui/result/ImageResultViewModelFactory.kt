@@ -7,7 +7,6 @@ import com.fantasy1022.pixabay.repository.ImageSearchRepository
 class ImageResultViewModelFactory (private val imageSearchRepository: ImageSearchRepository) :
     ViewModelProvider.NewInstanceFactory() {
 
-    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ImageResultViewModel(imageSearchRepository) as T
     }

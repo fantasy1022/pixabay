@@ -20,7 +20,6 @@ import com.fantasy1022.pixabay.utilities.InjectorUtils
 import com.fantasy1022.pixabay.utilities.SpUtils
 import kotlinx.android.synthetic.main.activity_image_result.*
 import kotlinx.android.synthetic.main.content_image_result.*
-import java.lang.IllegalArgumentException
 
 class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
 
@@ -37,10 +36,6 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
 
     enum class LayoutManagerType(val value: Int) {
         STAGGER(0), GRID(1), LINEAR(2);
-
-        companion object {
-            fun toEnum(value: Int): LayoutManagerType = values().first { it.value == value }
-        }
     }
 
     private lateinit var viewModel: ImageResultViewModel
@@ -153,7 +148,6 @@ class ImageResultActivity : AppCompatActivity(), ImageAdapter.Callback {
             scrollToPosition(scrollPosition)
             imageAdapter.notifyDataSetChanged()
         }
-
     }
 
     override fun onClick(transitionData: TransitionData) {
