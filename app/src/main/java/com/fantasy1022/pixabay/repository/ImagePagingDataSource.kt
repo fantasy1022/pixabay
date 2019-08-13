@@ -8,6 +8,7 @@ import com.fantasy1022.pixabay.data.ImagesMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlin.coroutines.CoroutineContext
 
 class ImagePagingDataSource(
@@ -28,23 +29,30 @@ class ImagePagingDataSource(
         callback: LoadInitialCallback<Int, ImagesInfo.ImageDetailInfo>
     ) {
         launch {
-            //TODO: try catch
-            val response = imageSearchApi.getImagesAsync(key, query, imageType, 1).await()
-            if (response.isSuccessful) {
-                val imagesInfo = imagesMapper.toImagesInfo(response.body()!!)
-                callback.onResult(imagesInfo.imagesDetailInfos, null, 2)
+            try {
+                val response = imageSearchApi.getImagesAsync(key, query, imageType, 1).await()
+                if (response.isSuccessful) {
+                    val imagesInfo = imagesMapper.toImagesInfo(response.body()!!)
+                    callback.onResult(imagesInfo.imagesDetailInfos, null, 2)
+                }
+            } catch (e: Exception) {
+                //Handel exception
             }
         }
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ImagesInfo.ImageDetailInfo>) {
         launch {
-            var pageNum = params.key
-            Log.d(tag, "loadAfter $pageNum")
-            val response = imageSearchApi.getImagesAsync(key, query, imageType, pageNum).await()
-            if (response.isSuccessful) {
-                val imagesInfo = imagesMapper.toImagesInfo(response.body()!!)
-                callback.onResult(imagesInfo.imagesDetailInfos, ++pageNum)
+            try {
+                var pageNum = params.key
+                Log.d(tag, "loadAfter $pageNum")
+                val response = imageSearchApi.getImagesAsync(key, query, imageType, pageNum).await()
+                if (response.isSuccessful) {
+                    val imagesInfo = imagesMapper.toImagesInfo(response.body()!!)
+                    callback.onResult(imagesInfo.imagesDetailInfos, ++pageNum)
+                }
+            } catch (exception: Exception) {
+                //Handel exception
             }
         }
     }
